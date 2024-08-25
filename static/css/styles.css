@@ -38,3 +38,13 @@ img {
 img:hover {
     transform: scale(1.05);
 }
+
+.summary-box {
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: left;
+}
