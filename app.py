@@ -8,8 +8,13 @@ import cv2
 import time
 import numpy as np
 import warnings
+import pyautogui
 from util import get_response
 import os
+import pathlib
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
+
 
 load_dotenv()
 
@@ -38,8 +43,10 @@ def gen_frames():
         #    break
         # else:
 
-        frame = ImageGrab.grab(bbox=(0, 0, 1920, 1080))
-        results = model(np.squeeze(frame))
+        #frame = ImageGrab.grab(bbox=(1400, 400, 1800, 800))
+        frame = pyautogui.screenshot(region=(1400, 400, 400, 400))
+        frame = np.squeeze(np.array(frame))
+        results = model(frame)
         filtered_results = results.xyxy[0][results.xyxy[0][:, 4] >= 0.1]
 
         for *box, conf, cls in filtered_results:
@@ -60,7 +67,7 @@ def gen_frames():
             cv2.rectangle(frame, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (255, 0, 0), 2)
             cv2.putText(frame, label, (int(box[0]), int(box[1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
 
-        ret, buffer = cv2.imencode('.jpg', frame)
+        ret, buffer = cv2.imencode('.jpg', np.squeeze(frame))
         frame = buffer.tobytes()
 
         yield (b'--frame\r\n'
