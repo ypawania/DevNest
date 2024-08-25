@@ -5,11 +5,17 @@ import time
 import numpy as np
 import warnings
 
+import pathlib
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
+
+
+
 warnings.filterwarnings("ignore", category=FutureWarning, message=".*torch.cuda.amp.autocast.*")
 
 app = Flask(__name__)
 
-model = torch.hub.load("ultralytics/yolov5", "custom", path="models/best.pt")
+model = torch.hub.load("ultralytics/yolov5", "custom", path="models/best.pt" ,force_reload=True)
 
 camera = cv2.VideoCapture(0)
 def gen_frames():  
