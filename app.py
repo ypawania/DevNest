@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import torch
 from flask import Flask, Response, render_template, jsonify
 import cv2
@@ -5,12 +6,25 @@ import time
 import numpy as np
 import warnings
 from util import get_response
+import os
+
+import pathlib
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
+
+load_dotenv()
+
+#Twilio stuff
+from twilio.rest import Client
+account_sid = os.getenv("ACCOUNT_SID")
+auth_token = os.getenv("AUTH_TOKEN")
+client = Client(account_sid, auth_token)
 
 warnings.filterwarnings("ignore", category=FutureWarning, message=".*torch.cuda.amp.autocast.*")
 
 app = Flask(__name__)
 
-model = torch.hub.load("ultralytics/yolov5", "custom", path="models/best.pt")
+model = torch.hub.load("ultralytics/yolov5", "custom", path="models/best.pt" ,force_reload=True)
 
 camera = cv2.VideoCapture(0)
 
@@ -30,6 +44,12 @@ def gen_frames():
                 if animal not in detected_animals:
                     summary = get_response(animal)
                     detected_animals[animal] = summary
+                    message = client.messages.create(
+                        from_='+12408396238',
+                        body='hey, mike testing',
+                        to='+14376697734'
+                    )
+                    print(message.sid)
 
                 label = f'{model.names[int(cls)]} {conf:.2f}'
                 cv2.rectangle(frame, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (255, 0, 0), 2)
@@ -41,6 +61,7 @@ def gen_frames():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
             
+
 
 @app.route("/")
 def index():
