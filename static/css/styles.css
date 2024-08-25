@@ -1,23 +1,23 @@
 /* CSS for Styling the Live Streaming Page */
 body {
-    background-color: #f8f9fa;
+    background-color: #24273a;
     font-family: Arial, sans-serif;
 }
 
 h3, h4 {
-    color: #343a40;
+    color: #cad3f5;
 }
 
 .container {
     text-align: center;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #363a4f;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 h3 {
-    color: #333333;
+    color: #cad3f5;
     font-size: 24px;
     margin-bottom: 20px;
 }
@@ -26,7 +26,7 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    border: 5px solid #333333;
+    border: 3px solid #494d64;
     border-radius: 10px;
     max-width: 100%;
     height: auto;
@@ -38,10 +38,11 @@ img:hover {
 }
 
 .summary-box {
-    border: 1px solid #dee2e6;
+    border: 1px solid #363a4f;
     border-radius: 0.25rem;
     padding: 1rem;
-    background-color: #ffffff;
+    background-color: #1e2030;
+    text-align: left;
 }
 
 .card {
