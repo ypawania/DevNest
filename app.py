@@ -37,7 +37,7 @@ def gen_frames():
         # else:
 
         frame = ImageGrab.grab(bbox=(0, 0, 1920, 1080))
-        results = model(frame)
+        results = model(np.squeeze(frame))
         filtered_results = results.xyxy[0][results.xyxy[0][:, 4] >= 0.1]
 
         for *box, conf, cls in filtered_results:
