@@ -1,47 +1,58 @@
-<html>
-    <head>
-        <title>Live Streaming</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <h3 class="mt-5">Live Streaming</h3>
-                    <img src="{{ url_for('video_feed') }}">
-                    <div id="summaries">
-                        <h4>Animal Summaries</h4>
-                        {% for animal, summary in detected_animals.items() %}
-                            <div class="summary-box">
-                                <h5>{{ animal }}</h5>
-                                <p>{{ summary }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Streaming</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h3 class="mt-5 text-center">Live Streaming</h3>
+                <div class="text-center">
+                    <img src="{{ url_for('video_feed') }}" class="img-fluid mt-3 mb-3">
+                </div>
+                <div id="summaries" class="mt-4">
+                    <h4 class="text-center">Animal Summaries</h4>
+                    {% for animal, summary in detected_animals.items() %}
+                        <div class="summary-box card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ animal }}</h5>
+                                <p class="card-text">{{ summary }}</p>
                             </div>
-                        {% endfor %}
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        function updateSummaries() {
+            fetch('/summaries')
+                .then(response => response.json())
+                .then(data => {
+                    const summariesDiv = document.getElementById('summaries');
+                    summariesDiv.innerHTML = '<h4 class="text-center">Animal Summaries</h4>';
+                    for (const [animal, summary] of Object.entries(data)) {
+                        const summaryBox = document.createElement('div');
+                        summaryBox.className = 'summary-box card mt-3';
+                        summaryBox.innerHTML = `
+                            <div class="card-body">
+                                <h5 class="card-title">${capitalizeFirstLetter(animal)}</h5>
+                                <p class="card-text">${marked.parse(summary)}</p>
+                            </div>`;
+                        summariesDiv.appendChild(summaryBox);
+                    }
+                });
+        }
+        setInterval(updateSummaries, 500);
+    </script>
+</body>
 </html>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    function updateSummaries() {
-        fetch('/summaries')
-            .then(response => response.json())
-            .then(data => {
-                const summariesDiv = document.getElementById('summaries');
-                summariesDiv.innerHTML = '<h4>Animal Summaries</h4>';
-                for (const [animal, summary] of Object.entries(data)) {
-                    const summaryBox = document.createElement('div');
-                    summaryBox.className = 'summary-box';
-                    summaryBox.innerHTML = `<h5>${capitalizeFirstLetter(animal)}</h5><p>${marked.parse(summary)}</p>`;
-                    summariesDiv.appendChild(summaryBox);
-                }
-            });
-    }
-    
-    setInterval(updateSummaries, 500);
-</script>
