@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+import requests
+import torch
 from PIL import ImageGrab
 from flask import Flask, Response, render_template, jsonify
 import torch
@@ -64,6 +66,20 @@ def gen_frames():
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
             
+
+
+
+
+def get_location():
+    response = requests.get('https://ipinfo.io/json')
+    data = response.json()
+    city = data.get('city')
+    region = data.get('region')
+    loc = data.get('loc')
+    return city, region, loc 
+print(get_location())
+
+
 
 
 @app.route("/")
