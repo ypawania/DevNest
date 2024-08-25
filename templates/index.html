@@ -23,6 +23,7 @@
         </div>
     </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     function updateSummaries() {
         fetch('/summaries')
@@ -33,11 +34,11 @@
                 for (const [animal, summary] of Object.entries(data)) {
                     const summaryBox = document.createElement('div');
                     summaryBox.className = 'summary-box';
-                    summaryBox.innerHTML = `<h5>${animal}</h5><p>${summary}</p>`;
+                    summaryBox.innerHTML = `<h5>${capitalizeFirstLetter(animal)}</h5><p>${marked.parse(summary)}</p>`;
                     summariesDiv.appendChild(summaryBox);
                 }
             });
     }
 
-    setInterval(updateSummaries, 500); // Update every 5 seconds
+    setInterval(updateSummaries, 500);
 </script>

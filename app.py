@@ -23,7 +23,7 @@ def gen_frames():
             break
         else:
             results = model(frame)
-            filtered_results = results.xyxy[0][results.xyxy[0][:, 4] >= 0.55]
+            filtered_results = results.xyxy[0][results.xyxy[0][:, 4] >= 0.1]
 
             for *box, conf, cls in filtered_results:
                 animal = model.names[int(cls)]
