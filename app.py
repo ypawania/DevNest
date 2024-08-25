@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import requests
 import torch
 from flask import Flask, Response, render_template, jsonify
 import cv2
@@ -44,12 +45,12 @@ def gen_frames():
                 if animal not in detected_animals:
                     summary = get_response(animal)
                     detected_animals[animal] = summary
-                    message = client.messages.create(
-                        from_='+12408396238',
-                        body='hey, mike testing',
-                        to='+14376697734'
-                    )
-                    print(message.sid)
+                    #message = client.messages.create(
+                    #    from_='+12408396238',
+                    #    body=('A dangerous ', animal, ' has been detected in ', get_location())
+                    #    to='+14376697734'
+                    #)
+                    #print(message.sid)
 
                 label = f'{model.names[int(cls)]} {conf:.2f}'
                 cv2.rectangle(frame, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (255, 0, 0), 2)
@@ -61,6 +62,20 @@ def gen_frames():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
             
+
+
+
+
+def get_location():
+    response = requests.get('https://ipinfo.io/json')
+    data = response.json()
+    city = data.get('city')
+    region = data.get('region')
+    loc = data.get('loc')
+    return city, region, loc 
+print(get_location())
+
+
 
 
 @app.route("/")
