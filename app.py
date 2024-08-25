@@ -6,6 +6,7 @@ import time
 import numpy as np
 import warnings
 from util import get_response
+import os
 
 import pathlib
 temp = pathlib.PosixPath
@@ -14,7 +15,7 @@ pathlib.PosixPath = pathlib.WindowsPath
 load_dotenv()
 
 from twilio.rest import Client
-account_sid = 'AC3e5ebb4d980b46e2a6d5dae01fd6e8a5'
+account_sid = os.getenv("ACCOUNT_SID")
 auth_token = os.getenv("AUTH_TOKEN")
 client = Client(account_sid, auth_token)
 
