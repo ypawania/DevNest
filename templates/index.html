@@ -6,11 +6,38 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-lg-8  offset-lg-2">
+                <div class="col-lg-8 offset-lg-2">
                     <h3 class="mt-5">Live Streaming</h3>
                     <img src="{{ url_for('video_feed') }}">
+                    <div id="summaries">
+                        <h4>Animal Summaries</h4>
+                        {% for animal, summary in detected_animals.items() %}
+                            <div class="summary-box">
+                                <h5>{{ animal }}</h5>
+                                <p>{{ summary }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-        </body>
+    </body>
 </html>
+<script>
+    function updateSummaries() {
+        fetch('/summaries')
+            .then(response => response.json())
+            .then(data => {
+                const summariesDiv = document.getElementById('summaries');
+                summariesDiv.innerHTML = '<h4>Animal Summaries</h4>';
+                for (const [animal, summary] of Object.entries(data)) {
+                    const summaryBox = document.createElement('div');
+                    summaryBox.className = 'summary-box';
+                    summaryBox.innerHTML = `<h5>${animal}</h5><p>${summary}</p>`;
+                    summariesDiv.appendChild(summaryBox);
+                }
+            });
+    }
+
+    setInterval(updateSummaries, 500); // Update every 5 seconds
+</script>
