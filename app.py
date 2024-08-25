@@ -14,6 +14,7 @@ pathlib.PosixPath = pathlib.WindowsPath
 
 load_dotenv()
 
+#Twilio stuff
 from twilio.rest import Client
 account_sid = os.getenv("ACCOUNT_SID")
 auth_token = os.getenv("AUTH_TOKEN")
